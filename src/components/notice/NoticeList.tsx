@@ -186,11 +186,9 @@ export const NoticeList: React.FC<NoticeListProps> = ({
                       <span
                         className={`text-[12px] font-medium ${getDepartmentColor(
                           (notice as any).targetType || ""
-                          // notice.targetDepartment
                         )}`}
                       >
                         {(notice as any).targetType || "All Departments"}
-                        {/* {notice.targetDepartment} */}
                       </span>
                     </td>
                     <td className="p-4 text-gray-500 text-[13px] whitespace-nowrap">

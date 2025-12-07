@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 import { API_BASE_URL } from "../lib/constants";
 import { MOCK_NOTICES } from "../lib/mockData";
 import type { Notice } from "../types/notice";
-// import type { Notice, NoticeFormData } from "../types/notice";
 
 const mapBackendStatus = (backendStatus?: string): Notice["status"] => {
   if (!backendStatus) return "Draft";
@@ -36,16 +35,7 @@ export const useNotices = () => {
         throw new Error(`HTTP ${response.status}`);
       }
 
-      // const data = await response.json();
-      // const formattedData: Notice[] = data.map(
-      //   (item: Notice & { _id?: string }) => ({
-      //     ...item,
-      //     id: item._id || item.id,
-      //   })
-      // );
-
       const result = await response.json();
-      console.log("API Response:", result);
 
       // Safe data extraction
       const apiData = result?.data || [];
@@ -72,62 +62,6 @@ export const useNotices = () => {
     }
   }, []);
 
-  // const createNotice = useCallback(
-  //   async (formData: NoticeFormData & { status?: Notice["status"] }) => {
-  //     try {
-  //       const backendPayload = {
-  //         body: {
-  //           title: formData.title || "",
-  //           body: formData.body || "",
-  //           targetType: formData.targetType || "all",
-  //           targetEmployee: formData.targetEmployee || "",
-  //           noticeType: formData.noticeType || "advisory-personal-reminder",
-  //           publishDate:
-  //             formData.publishDate || new Date().toISOString().split("T")[0],
-  //           attachments: formData.attachments || [],
-  //           status:
-  //             formData.status === "Published"
-  //               ? "published"
-  //               : formData.status === "Unpublished"
-  //               ? "unpublished"
-  //               : "draft",
-  //         },
-  //       };
-
-  //       const response = await fetch(`${API_BASE_URL}/notices`, {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify(backendPayload),
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error("Server rejected the request");
-  //       }
-
-  //       const result = await response.json();
-  //       const newNotice = result.data; // Backend wraps in { data: {} }
-
-  //       setNotices((prev) => [
-  //         {
-  //           ...newNotice,
-  //           id: newNotice._id || newNotice.id,
-  //           status: mapBackendStatus(newNotice.status),
-  //         },
-  //         ...prev,
-  //       ]);
-
-  //       return { success: true, notice: newNotice };
-  //     } catch (err) {
-  //       console.error("Error creating notice:", err);
-  //       return {
-  //         success: false,
-  //         error: err instanceof Error ? err.message : "Failed to create notice",
-  //       };
-  //     }
-  //   },
-  //   []
-  // );
-
   const createNotice = useCallback(async (formData: any) => {
     try {
       const backendPayload = {
@@ -140,10 +74,8 @@ export const useNotices = () => {
         noticeType: formData.noticeType || "performance-improvement",
         publishDate:
           formData.publishDate || new Date().toISOString().split("T")[0],
-        // status: "draft",
+        status: "published",
       };
-
-      console.log("🔍 SENDING TO BACKEND:", backendPayload);
 
       const response = await fetch(`${API_BASE_URL}/notices`, {
         method: "POST",
@@ -157,7 +89,6 @@ export const useNotices = () => {
       }
 
       const result = await response.json();
-      console.log("✅ CREATE RESPONSE:", result);
 
       // const newNotice = result.data;
       const newNotice = result.data || result;

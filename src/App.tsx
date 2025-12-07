@@ -22,13 +22,9 @@ export default function App() {
   const handleCreateNotice = async (formData: NoticeFormData) => {
     // Validation
     const requiredFields = [
-      // "targetDepartment",
       "title",
       "targetType",
       "targetEmployee",
-      // "employeeId",
-      // "employeeName",
-      // "position",
       "noticeType",
       "publishDate",
     ];
@@ -41,7 +37,6 @@ export default function App() {
       return;
     }
 
-    console.log("✅ VALIDATION PASSED, creating notice...");
     const result = await createNotice(formData);
 
     if (result.success) {

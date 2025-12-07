@@ -218,7 +218,6 @@ export const CreateNoticeForm: React.FC<CreateNoticeFormProps> = ({
         <button
           // onClick={() => onSave(formData)}
           onClick={() => {
-            // ✅ MAP NoticeType "Performance Improvement" → "performance-improvement"
             const noticeTypeMap: Record<string, string> = {
               "Warning / Disciplinary": "warning-disciplinary",
               "Performance Improvement": "performance-improvement",
@@ -238,10 +237,9 @@ export const CreateNoticeForm: React.FC<CreateNoticeFormProps> = ({
                 noticeTypeMap[formData.noticeType as string] ||
                 "performance-improvement",
               publishDate: formData.publishDate,
-              // status: "published"
+              status: "published",
             };
 
-            console.log("🔍 BACKEND DATA:", backendData);
             (onSave as any)(backendData);
           }}
           className="px-6 py-2 rounded-full bg-[#F97316] text-white font-medium text-sm hover:bg-orange-600 shadow-md flex items-center justify-center gap-2 transition-all w-full sm:w-auto"
