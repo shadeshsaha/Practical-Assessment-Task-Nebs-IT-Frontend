@@ -38,10 +38,6 @@ To run this project locally, you will need to add the following environment vari
 
 ## ⚙️ Installation & Setup
 
-### Option 1: Using Docker (Recommended)
-
-This method automatically sets up the Database, Backend, and Frontend in isolated containers.
-
 1.  **Clone the repository:**
 
     ```bash
