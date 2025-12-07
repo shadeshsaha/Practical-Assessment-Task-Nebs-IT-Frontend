@@ -5,7 +5,9 @@ import { MOCK_NOTICES } from "../lib/mockData";
 import type { Notice } from "../types/notice";
 // import type { Notice, NoticeFormData } from "../types/notice";
 
-const mapBackendStatus = (backendStatus: string): Notice["status"] => {
+const mapBackendStatus = (backendStatus?: string): Notice["status"] => {
+  if (!backendStatus) return "Draft";
+
   switch (backendStatus.toLowerCase()) {
     case "published":
       return "Published";
@@ -45,6 +47,7 @@ export const useNotices = () => {
       const result = await response.json();
       console.log("API Response:", result);
 
+      // Safe data extraction
       const apiData = result?.data || [];
       if (!Array.isArray(apiData)) {
         console.warn("API data is not an array:", apiData);
@@ -52,6 +55,7 @@ export const useNotices = () => {
         return;
       }
 
+      // Safe mapping with status check
       const formattedData: Notice[] = apiData.map((item: any) => ({
         ...item,
         id: item._id || item.id,
@@ -127,18 +131,19 @@ export const useNotices = () => {
   const createNotice = useCallback(async (formData: any) => {
     try {
       const backendPayload = {
-        title: formData.title || "",
-        body: formData.body || "",
-        targetType:
-          formData.targetDepartment?.toLowerCase().replace(/\s+/g, "-") || "hr",
-        targetEmployee: formData.employeeId || "",
-        noticeType:
-          formData.noticeType?.toLowerCase().replace(/\s+/g, "-") ||
-          "performance-improvement",
-        publishDate: formData.publishDate || "2025-12-31",
-        attachments: [],
-        status: "published",
+        title: formData.title?.trim() || "",
+        body: formData.body?.trim() || "",
+        targetType: formData.targetType || "all",
+        targetEmployees: formData.targetEmployee
+          ? [formData.targetEmployee]
+          : [],
+        noticeType: formData.noticeType || "performance-improvement",
+        publishDate:
+          formData.publishDate || new Date().toISOString().split("T")[0],
+        // status: "draft",
       };
+
+      console.log("🔍 SENDING TO BACKEND:", backendPayload);
 
       const response = await fetch(`${API_BASE_URL}/notices`, {
         method: "POST",
@@ -147,18 +152,20 @@ export const useNotices = () => {
       });
 
       if (!response.ok) {
-        const errorText = await response.clone().text(); // Clone for error
+        const errorText = await response.text();
         throw new Error(`Failed: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
-      const newNotice = result.data;
+      console.log("✅ CREATE RESPONSE:", result);
 
+      // const newNotice = result.data;
+      const newNotice = result.data || result;
       setNotices((prev) => [
         {
           ...newNotice,
-          id: newNotice._id,
-          status: mapBackendStatus(newNotice.status),
+          id: newNotice._id || newNotice.id,
+          status: mapBackendStatus(newNotice?.status),
         },
         ...prev,
       ]);

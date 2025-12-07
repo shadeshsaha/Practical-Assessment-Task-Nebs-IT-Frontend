@@ -216,34 +216,34 @@ export const CreateNoticeForm: React.FC<CreateNoticeFormProps> = ({
           Save as Draft
         </button>
         <button
-          onClick={() => onSave(formData)}
-          // onClick={() => {
-          //   const noticeTypeMap: Record<string, string> = {
-          //     "Warning Disciplinary": "warning-disciplinary",
-          //     "Performance Improvement": "performance-improvement",
-          //     "Appreciation Recognition": "appreciation-recognition",
-          //     "Attendance Leave Issue": "attendance-leave-issue",
-          //     "Payroll Compensation": "payroll-compensation",
-          //     "Contract Role Update": "contract-role-update",
-          //     "Advisory Personal Reminder": "advisory-personal-reminder",
-          //   };
+          // onClick={() => onSave(formData)}
+          onClick={() => {
+            // ✅ MAP NoticeType "Performance Improvement" → "performance-improvement"
+            const noticeTypeMap: Record<string, string> = {
+              "Warning / Disciplinary": "warning-disciplinary",
+              "Performance Improvement": "performance-improvement",
+              "Appreciation / Recognition": "appreciation-recognition",
+              "Attendance / Leave Issue": "attendance-leave-issue",
+              "Payroll / Compensation": "payroll-compensation",
+              "Contract / Role Update": "contract-role-update",
+              "Advisory / Personal Reminder": "advisory-personal-reminder",
+            };
 
-          //   const backendData = {
-          //     title: formData.title.trim(),
-          //     body: formData.body?.trim() || undefined,
-          //     targetType: formData.targetType,
-          //     targetEmployee: formData.targetEmployee,
-          //     noticeType:
-          //       noticeTypeMap[formData.noticeType as string] ||
-          //       "performance-improvement",
-          //     publishDate: formData.publishDate,
-          //     status: "published",
-          //   };
+            const backendData = {
+              title: formData.title.trim(),
+              body: formData.body?.trim() || "",
+              targetType: formData.targetType,
+              targetEmployee: formData.targetEmployee,
+              noticeType:
+                noticeTypeMap[formData.noticeType as string] ||
+                "performance-improvement",
+              publishDate: formData.publishDate,
+              // status: "published"
+            };
 
-          //   console.log("🔍 FIXED DATA:", backendData);
-
-          //   (onSave as any)(backendData);
-          // }}
+            console.log("🔍 BACKEND DATA:", backendData);
+            (onSave as any)(backendData);
+          }}
           className="px-6 py-2 rounded-full bg-[#F97316] text-white font-medium text-sm hover:bg-orange-600 shadow-md flex items-center justify-center gap-2 transition-all w-full sm:w-auto"
         >
           <span className="text-xs">✓</span> Publish Notice
